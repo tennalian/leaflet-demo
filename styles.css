@@ -1,0 +1,97 @@
+html, body{
+  width: 100%;
+  height: 100%;
+}
+
+body{
+  margin:0;
+  padding: 0;
+  color: #333;
+  background: white;
+}
+
+.menu{
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  background: #eee;
+}
+
+.menu ul{
+  width: 300px;
+  margin: 0;
+  padding: 20px;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.39);
+  text-align:  center;
+}
+
+.menu ul li{
+  list-style: none;
+  font-size: 20px;
+  font-family: Arial, sans-serif;
+  margin: 0 0 10px;
+}
+
+.menu ul li a{color: #333}
+
+.menu ul li h3{
+  margin: 0 0 30px;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+#map{
+  width: 100%;
+  height: 100%;
+  background: #eee;
+}
+
+.circle{
+  width: 10px;
+  height: 10px;
+  background: #a60756;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.options{
+  display: block;
+  width: 300px;
+  padding: 20px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.39);
+  z-index: 9999;
+}
+
+.options > div ~ div {
+  margin-top: 20px;
+}
+
+.options h3 {
+  font-size: 18px;
+  margin: 0 0 20px;
+}
+
+.options ul {
+  margin: 0;
+  padding: 0;
+}
+
+.options li {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0 0 10px;
+}
+
+.options li input {
+  margin-rigth: 10px;
+}
