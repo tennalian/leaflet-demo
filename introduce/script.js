@@ -1,6 +1,6 @@
 (function() {
   const customIcon = L.icon({
-    iconUrl: './icon.png',
+    iconUrl: '../images/icon.png',
     iconSize: [100, 100]
   });
   const latlngs = [[54.71331716, 20.50177574], [54.71123468, 20.50898552], [54.7027053, 20.50555229]];
