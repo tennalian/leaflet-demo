@@ -1,12 +1,19 @@
 (function() {
   const customIcon = L.icon({
-    iconUrl: './icon.png',
+    iconUrl: '../leaflet/images/icon.png',
     iconSize: [100, 100]
   });
-  const latlngs = [[54.71331716, 20.50177574], [54.71123468, 20.50898552], [54.7027053, 20.50555229]];
-  const options = [{
+  const latlngs = [
+    [54.71331716, 20.50177574],
+    [54.71123468, 20.50898552],
+    [54.7027053, 20.50555229],
+    [54.70518495, 20.4982996],
+    [54.70275489, 20.48902988],
+    [54.71401129, 20.48336506]
+  ];
+  const stuffs = [{
     id: 0,
-    name: 'Marker',
+    name: 'Markers',
     layer: L.marker([54.71331716, 20.50177574])
   }, {
     id: 1,
@@ -72,7 +79,6 @@
     }
 
     drawItem(item) {
-      console.log(item)
       this.map.removeLayer(this.layer);
       this.layer = L.layerGroup([item.layer]);
       this.layer.addTo(this.map);
@@ -95,7 +101,7 @@
   const stuffsBlock = document.querySelector('.stuffs').querySelector('ul');
   const tilesBlock = document.querySelector('.tiles').querySelector('ul');
 
-  options.forEach(stuff => {
+  stuffs.forEach(stuff => {
     const li = document.createElement('li');
     const el = `
         <label>
@@ -128,7 +134,7 @@
 
   stuffsBlock.querySelectorAll('input').forEach(el => {
     el.addEventListener('click', (e) => {
-      let item = options.find(s => {
+      let item = stuffs.find(s => {
         return s.id == e.target.value;
       });
       map.drawItem(item);

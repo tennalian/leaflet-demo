@@ -95,3 +95,27 @@ body{
 .options li input {
   margin-rigth: 10px;
 }
+
+.options .actions{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.btn{
+  display: inline-block;
+  padding: 10px;
+  text-decoration: none;
+  background: #2196f3;
+  color: white;
+  text-align: center;
+  border: 0;
+  font-size: 20px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.btn:hover{
+  background: #1c81d2;
+}
+
+.btn ~ .btn{margin-top: 10px;}
