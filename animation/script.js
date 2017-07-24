@@ -1,4 +1,5 @@
 (function() {
+  const latlngs = [L.latLng(54.71331716, 20.50177574), L.latLng(54.71123468, 20.50898552), L.latLng(54.7027053, 20.50555229)];
   const map = L.map('map', {
     zoom: 15,
     // crs: L.CRS.Base,
@@ -16,13 +17,23 @@
   let animate = document.querySelector('.circle')
   var fx = new L.PosAnimation();
 
-  let ltlng = L.latLng(54.71331716, 20.50177574)
-  let point = L.CRS.EPSG3857.latLngToPoint(ltlng)
-  // console.log(L.CRS.project(ltlng))
-  // fx.run(animate, point, 100);
+  let ltlng = latlngs[1];
+  let point = getPoint(ltlng);
+  console.log(point)
 
-  fx.on('end', () => {
-    console.log('finish')
-  })
+  fx.run(animate, L.point(200,300), 100);
 
+  // fx.on('end', () => {
+  //   console.log('finish')
+  //   let index = Math.floor(Math.random() * latlngs.length);
+  //   let point = getPoint(latlngs[index]);
+  //   fx.run(animate, point, 100);
+  // })
+
+  function getPoint(item) {
+    let zoom = map.getZoom();
+    console.log(zoom)
+    let point = L.CRS.EPSG3395.latLngToPoint(item, zoom);
+    return point;
+  }
 })();
