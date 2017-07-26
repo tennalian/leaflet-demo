@@ -7,7 +7,8 @@
       this.index = 1;
       this.animate = null;
       this.circle = null;
-      this.fx = {};
+      this.fx = null;
+      this.currentLatlng = [54.71331716, 20.50177574];
       this.stop = true;
     }
 
@@ -23,6 +24,18 @@
 
       this.addMarkers();
       this.initAnimation();
+
+      this.map.on('zoomstart', () => {
+        let currentPosition = L.DomUtil.getPosition(this.animate);
+        this.currentLatlng = this.getLatLng(currentPosition);
+        this.stopAnimation();
+        this.updateMarker()
+      });
+
+      this.map.on('zoomend', () => {
+        this.animate = document.querySelector('.circle');
+        this.runAnimation();
+      });
     }
 
     addMarkers() {
@@ -37,7 +50,7 @@
     initAnimation() {
       const self = this;
       const icon = L.divIcon({className: 'circle'});
-      this.circle = L.marker([54.71331716, 20.50177574], {icon}).addTo(this.map)
+      this.circle = L.marker(this.currentLatlng, {icon});
       this.circle.addTo(this.map);
 
       this.index = 1;
@@ -47,8 +60,14 @@
       this.stop = false;
 
       this.fx.on('end', () => {
-        return self.updateTarget.apply(this);
+        return self.updateTarget();
       });
+    }
+
+    updateMarker(latlng) {
+      this.circle.remove();
+      this.circle.setLatLng(this.currentLatlng)
+      this.circle.addTo(this.map);
     }
 
     updateTarget() {
@@ -57,7 +76,7 @@
         if (this.index > 2) {
           this.index = 0;
         }
-        this.runAnimation();
+        return this.runAnimation();
       }
     }
 
@@ -72,13 +91,12 @@
       this.fx.run(this.animate, point, 5, 1);
     }
 
-    destroyAnimation() {
-      this.stopAnimation();
-      this.circle.remove();
+    getPoint(item) {
+      return this.map.latLngToLayerPoint(item);
     }
 
-    getPoint(item) {
-      return this.map.latLngToLayerPoint(L.latLng(item[0], item[1]));
+    getLatLng(item) {
+      return this.map.layerPointToLatLng(item);
     }
 
     animation(){
