@@ -73,7 +73,7 @@
       let next = (this.index + 1 > 2) ? 0 : this.index + 1;
       let currentPosition = L.DomUtil.getPosition(this.animate);
       this.currentLatlng = this.getLatLng(currentPosition);
-      return currentPosition.distanceTo(this.getPoint(latlngs[next]));
+      return this.currentLatlng.distanceTo(this.getLatLng(latlngs[next]));
     }
 
     updateMarker() {
@@ -102,6 +102,9 @@
     }
 
     runAnimation(time) {
+      if (this.stop) {
+        this.pauseDistance = this.getDistance();
+      }
       console.log(this.distance, this.pauseDistance)
       const duration = (this.distance && this.pauseDistance) ?  this.pauseDistance * 5 / this.distance : 5;
       const point = this.getPoint(latlngs[this.index]);
