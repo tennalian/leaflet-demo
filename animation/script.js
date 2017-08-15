@@ -10,8 +10,8 @@
       this.fx = null;
       this.currentLatlng = [54.71331716, 20.50177574];
       this.stop = true;
-      this.startTime = null;
-      this.endTime = null;
+      this.pauseDistance = null;
+      this.distance = null;
     }
 
     init() {
@@ -57,35 +57,42 @@
 
       this.index = 1;
       this.animate = document.querySelector('.circle');
+      this.distance = this.getDistance();
+
       this.fx = new L.PosAnimation();
 
       this.fx.on('end', () => {
-        this.endTime = new Date().getTime();
-        const wastedTime = this.endTime - this.startTime;
-        return self.updateTarget(wastedTime);
-      });
-
-      this.fx.on('start', start => {
-        this.startTime = new Date().getTime();
+        return self.updateTarget();
       });
 
       this.stop = false;
       this.runAnimation();
     }
 
-    updateMarker(latlng) {
+    getDistance() {
+      let next = (this.index + 1 > 2) ? 0 : this.index + 1;
+      let currentPosition = L.DomUtil.getPosition(this.animate);
+      this.currentLatlng = this.getLatLng(currentPosition);
+      return this.currentLatlng.distanceTo(this.getLatLng(latlngs[next]));
+    }
+
+    updateMarker() {
       this.circle.remove();
       this.circle.setLatLng(this.currentLatlng)
       this.circle.addTo(this.map);
     }
 
-    updateTarget(time) {
+    updateTarget() {
       if (!this.stop) {
         this.index ++;
         if (this.index > 2) {
           this.index = 0;
         }
-        return this.runAnimation(time);
+        this.pauseDistance = null;
+        this.distance = this.getDistance();
+        return this.runAnimation();
+      } else {
+        this.pauseDistance = this.getDistance();
       }
     }
 
@@ -95,12 +102,12 @@
     }
 
     runAnimation(time) {
-      console.log(time)
+      console.log(this.distance, this.pauseDistance)
+      const duration = (this.distance && this.pauseDistance) ?  this.distance * 5 / this.pauseDistance : 5;
       const point = this.getPoint(latlngs[this.index]);
-      const duration = time ? (5000 - time)/1000 : 5
-      this.stop = false;
 
       console.log(duration)
+      this.stop = false;
       this.fx.run(this.animate, point, duration, 1);
     }
 
