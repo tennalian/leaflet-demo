@@ -10,6 +10,8 @@
       this.fx = null;
       this.currentLatlng = [54.71331716, 20.50177574];
       this.stop = true;
+      this.startTime = null;
+      this.endTime = null;
     }
 
     init() {
@@ -54,14 +56,21 @@
       this.circle.addTo(this.map);
 
       this.index = 1;
-      this.animate = document.querySelector('.circle')
+      this.animate = document.querySelector('.circle');
       this.fx = new L.PosAnimation();
-      this.runAnimation();
-      this.stop = false;
 
       this.fx.on('end', () => {
-        return self.updateTarget();
+        this.endTime = new Date().getTime();
+        const wastedTime = this.endTime - this.startTime;
+        return self.updateTarget(wastedTime);
       });
+
+      this.fx.on('start', start => {
+        this.startTime = new Date().getTime();
+      });
+
+      this.stop = false;
+      this.runAnimation();
     }
 
     updateMarker(latlng) {
@@ -70,13 +79,13 @@
       this.circle.addTo(this.map);
     }
 
-    updateTarget() {
+    updateTarget(time) {
       if (!this.stop) {
         this.index ++;
         if (this.index > 2) {
           this.index = 0;
         }
-        return this.runAnimation();
+        return this.runAnimation(time);
       }
     }
 
@@ -85,10 +94,14 @@
       this.fx.stop();
     }
 
-    runAnimation() {
+    runAnimation(time) {
+      console.log(time)
       const point = this.getPoint(latlngs[this.index]);
+      const duration = time ? (5000 - time)/1000 : 5
       this.stop = false;
-      this.fx.run(this.animate, point, 5, 1);
+
+      console.log(duration)
+      this.fx.run(this.animate, point, duration, 1);
     }
 
     getPoint(item) {
