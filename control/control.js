@@ -38,6 +38,8 @@
       this._map._container.style.cursor = 'pointer';
       L.DomUtil.removeClass(this._container, 'deactivate');
       L.DomEvent.on(document, 'click', this._onClick, this);
+      this._tooltip = L.DomUtil.create('div', 'leaflet-example-tooltip', document.body);
+      this._tooltip.innerHTML = 'Click on map!';
     },
 
     deactivate: function() {
@@ -47,6 +49,7 @@
       this._map._container.style.cursor = 'auto';
       L.DomUtil.addClass(this._container, 'deactivate');
       L.DomEvent.off(document, 'click', this._onClick, this);
+      L.DomUtil.remove(this._tooltip);
     },
 
     _toggle(e) {
@@ -58,7 +61,6 @@
     },
 
     _onClick: function(e) {
-      console.log(e)
       const position = {
         x: e.x,
         y: e.y
@@ -69,7 +71,7 @@
       this._box.innerHTML = 'Yep!';
 
       L.DomUtil.setPosition(this._box, position);
-      this._map.fire('exampleControl:click', position); // for example
+      this._map.fire('exampleControl:click', position); // fireEvent for example
     }
   });
 

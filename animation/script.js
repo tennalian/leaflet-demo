@@ -9,8 +9,10 @@
       this.animate = null;
       this.circle = null;
       this.fx = null;
-      this.currentLatlng = [54.71331716, 20.50177574];
+      this.currentLatlng = latlngs[0];
       this.stop = true;
+      this.start = false;
+      this.zoomAnimation = true;
       this.pauseDistance = null;
       this.distance = null;
     }
@@ -31,13 +33,14 @@
       this.map.on('zoomstart', () => {
         let currentPosition = L.DomUtil.getPosition(this.animate);
         this.currentLatlng = this.getLatLng(currentPosition);
+        this.zoomAnimation = this.stop;
         this.stopAnimation();
         this.updateMarker()
       });
 
       this.map.on('zoomend', () => {
         this.animate = document.querySelector('.circle');
-        this.runAnimation();
+        !this.zoomAnimation && this.runAnimation();
       });
     }
 
@@ -107,18 +110,16 @@
 
     stopAnimation() {
       this.stop = true;
+      this.start = false;
       this.fx.stop();
     }
 
     runAnimation(time) {
-      if (this.stop) {
-        this.pauseDistance = this.getDistance();
-      }
-
       const duration = (this.distance && this.pauseDistance) ?  this.pauseDistance * 5 / this.distance : 5;
       const point = this.getPoint(latlngs[this.index]);
 
       this.stop = false;
+      this.start = true;
       this.fx.run(this.animate, point, duration, 1);
     }
 
@@ -131,7 +132,11 @@
     }
 
     animation(){
-      return this.animate;
+      return this.animate
+    }
+
+    animationMove(){
+      return this.start;
     }
 
   }
@@ -142,11 +147,11 @@
   const startBtn = document.querySelector('.start');
 
   stopBtn.addEventListener('click', () => {
-    map.animation() && map.stopAnimation();
+    map.animation() && map.animationMove() && map.stopAnimation();
   });
 
   startBtn.addEventListener('click', () => {
-    map.animation() && map.runAnimation();
+    map.animation() && !map.animationMove() && map.runAnimation();
   });
 
 })();
