@@ -4,6 +4,7 @@
   class Map {
     constructor() {
       this.map = {};
+      this.markersLayer = [];
       this.index = 1;
       this.animate = null;
       this.circle = null;
@@ -41,12 +42,12 @@
     }
 
     addMarkers() {
-      let markersLayer = [];
-      latlngs.forEach(latlng => {
+      this.markersLayer = [];
+      latlngs.forEach((latlng, i) => {
         let marker = L.marker(latlng);
-        markersLayer.push(marker);
-      })
-      let layer = L.layerGroup(markersLayer).addTo(this.map);
+        this.markersLayer.push(marker);
+      });
+      let layer = L.layerGroup(this.markersLayer).addTo(this.map);
     }
 
     initAnimation() {
@@ -70,10 +71,18 @@
     }
 
     getDistance() {
-      let next = (this.index + 1 > 2) ? 0 : this.index + 1;
+      let nextPoint = latlngs[this.index];
       let currentPosition = L.DomUtil.getPosition(this.animate);
-      this.currentLatlng = this.getLatLng(currentPosition);
-      return this.currentLatlng.distanceTo(this.getLatLng(latlngs[next]));
+      let nextPointPosition = null;
+
+      this.markersLayer.forEach(marker => {
+        let latlng = marker.getLatLng()
+        if ((latlng.lat === nextPoint[0]) && (latlng.lng === nextPoint[1])) {
+          nextPointPosition = marker._icon._leaflet_pos;
+        }
+      });
+
+      return (nextPointPosition) ? currentPosition.distanceTo(nextPointPosition) : null;
     }
 
     updateMarker() {
@@ -105,11 +114,10 @@
       if (this.stop) {
         this.pauseDistance = this.getDistance();
       }
-      console.log(this.distance, this.pauseDistance)
+
       const duration = (this.distance && this.pauseDistance) ?  this.pauseDistance * 5 / this.distance : 5;
       const point = this.getPoint(latlngs[this.index]);
 
-      console.log(duration)
       this.stop = false;
       this.fx.run(this.animate, point, duration, 1);
     }
